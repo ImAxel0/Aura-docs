@@ -1,0 +1,72 @@
+---
+title: Aura
+description: Powerfull .NET audio framework for audio and MIDI playback, editing, and VST plugin integration.
+template: splash
+hero:
+  tagline: .NET Audio Framework for audio and MIDI playback, editing, and plugin integration.
+  image:
+    file: ../../assets/logo.png
+  actions:
+    - text: Read the Docs
+      link: /getting-started/installation
+      icon: right-arrow
+    - text: Visit the Github repository
+      link: https://starlight.astro.build
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid } from "@astrojs/starlight/components";
+
+<big>
+  Aura is a .NET audio framework which provides a structured workflow for
+  handling audio/MIDI clips, tracks, and real-time processing, making it ideal
+  for digital audio applications.
+</big>
+
+## Core Features
+
+<CardGrid>
+  <Card title="Audio and Midi clips" icon="biome">
+    Create **Audio** and **Midi** clips, tweak their options, place them in
+    tracks and play them.
+
+    [Explore clips...](./main-concepts/core-features#clips)
+
+  </Card>
+  <Card title="Audio and Midi tracks" icon="bars">
+    Support for **Audio** and **Midi** tracks allows to group clips, apply
+    effects to all and build audio pipelines.
+
+    [Explore tracks...](./main-concepts/core-features#tracks)
+
+  </Card>
+  <Card title="Virtual Studio Technology (VST)" icon="setting">
+    Plug and play **VST2 Plugins** support. Process the audio signal or generate
+    it from external and built in plugins.
+
+    [Explore plugins...](./main-concepts/core-features#plugins)
+
+  </Card>
+  <Card title="Automations" icon="forward-slash">
+    **Automate** clips parameters like volume and pan during playback.
+
+    [Explore automations...](./main-concepts/core-features#automations)
+
+  </Card>
+</CardGrid>
+
+## Highlights
+
+<CardGrid>
+  <Card title="Built on Robust Libraries" icon="open-book">
+    The framework makes use of popular open source libraries like **NAudio**,
+    **DryWetMidi**, **SoundTouch.Net** and **VST.NET**.
+  </Card>
+
+<Card title="Wide Use Cases" icon="laptop">
+  **Build** whatever you think of, be it a simple audio player, a sound editor
+  or a DAW like application.
+</Card>
+
+</CardGrid>

@@ -1,0 +1,126 @@
+---
+title: VST Plugins
+---
+
+import { LinkCard } from "@astrojs/starlight/components";
+import { CardGrid } from "@astrojs/starlight/components";
+import { Aside } from "@astrojs/starlight/components";
+
+This guide shows how to load and manage Virtual Studio Technology (VST2) plugins.
+
+VST plugins are external plugins you can find online both free and paid. They can add effects to the sound like reverb, delay or generate sounds like synthesizers.
+
+Unfortunately [VST.NET](https://github.com/obiwanjacobi/vst.net) doesn't support the latest VST3 standard, so we are limited to VST2 as of now, but you can still find many plugins to use.
+
+Altogether, the framework VST support may not be completed, but seems to work fine in most cases.
+
+### Loading a VST Plugin
+
+To load a VST plugin we just need to create a new `VstPlugin` class instance and pass the plugin `.dll` file path. This implements the `IPlugin` interface as explained in the page before.
+
+```cs
+var vst = new VstPlugin("path/to/plugin.dll"); // Loading the plugin
+```
+
+Optionally we can also configure some plugin behaviours through flags.
+
+```cs
+// Loading the plugin, removing the minimize button, making the window always stay on top and receive midi events from computer keyboard
+var vst = new VstPlugin("path/to/plugin.dll", VstFlags.NoMinimize | VstFlags.AlwaysOnTop | VstFlags.ComputerKeyboard);
+```
+
+### Using VST Plugins
+
+To process audio through the loaded plugin, we need to add it to a track (both audio, midi and group tracks will work if it's not a plugin instrument).
+
+```cs
+var track = new AudioTrack(); // Creating an audio track
+var result = audioTrack.AddPlugin(vst); // Adding the VST plugin to the audio track
+if (!result.IsSuccess) // Checking if the plugin was successfully added
+{
+    // Printing the error message if not successfull
+    Console.WriteLine($"Couldn't add plugin: {result.Message}");
+}
+```
+
+Now whenever a clip inside that track is played the sound will be processed through the VST plugin.
+
+To remove the plugin from the track:
+
+```cs
+track.RemovePlugin(vst); // Removing the VST plugin from the audio track
+```
+
+<Aside type="caution">
+  When a plugin is removed from a track it will be disposed and not available to
+  use anymore.
+</Aside>
+
+<Aside>
+  The framework automatically handles plugins swap preventing to add multiple
+  instruments to the same midi track by replacing the current instrument with
+  the new one. <br />
+  <br /> It also prevents from adding plugin instruments to audio tracks and adding
+  the same plugin instance to different tracks.
+</Aside>
+
+## VST plugins parameters
+
+- `Enabled`: represents the state of the plugin. If disabled it won't process/generate sound.
+- `Name`: name of the VST plugin (comes from the dll name).
+- `PluginId`: an unique generated id in the form `5cafb3a8-dba4-47ce-9e58-03d972526c50`.
+- `PluginType`: the type of the VST plugin (either an effect or instrument).
+- `VstFlags`: flags to customize certain aspects of the VST.
+
+## VST plugins operations
+
+- `AddKeyDownEvent()`: calls an event whenever the plugin window has focus and a key is pressed.
+- `AddKeyUpEvent()`: calls an event whenever the plugin window has focus and a key is released.
+- `RemoveKeyDownEvent()`: removes a registered key down event.
+- `RemoveKeyUpEvent()`: removes a registered key up event.
+- `OpenPluginWindow()`: opens the plugin interface.
+- `ClosePluginWindow()`: closes the plugin interface.
+- `Toggle()`: toggles the `Enabled` property.
+- `Dispose()`: calls **DisposeVST**.
+- `DisposeVST()`: disposes the VST plugin.
+- `ReceiveMidiEvent()`: method which handles incoming midi events. Can also be used to send testing midi events to the vst.
+
+<Aside type="note">
+  Probably not all midi event types are handled, but I tried to add the most
+  common ones.
+</Aside>
+
+<Aside type="caution" title="Important Note">
+  If you hear time misplacements when playing midi clips through a VST plugin
+  instrument, try to reduce the latency of the `AudioDevice` as low as possible.
+  For this reason, using the ASIO audio API is highly recommended if you are
+  going to make use of VST plugins.
+</Aside>
+
+## Example
+
+In this example we create a midi clip, add it to a created midi track, load a plugin instrument and add it to the midi track, then play the midi clip.
+
+```cs
+var midiClip = new MidiClip("path/to/midi.mid"); // Create a midi clip
+var midiTrack = new MidiTrack(); // Create a midi track
+var vstInstrument = new VstPlugin("path/to/plugin.dll"); // Load the VST plugin instrument
+
+midiTrack.AddClip(midiClip); // Add the midi clip to the midi track
+midiTrack.AddPlugin(vstInstrument); // Add the VST plugin instrument to the midi track
+
+midiClip.Play(); // Play the midi clip (sound will generate from the VST plugin)
+```
+
+<CardGrid>
+  <LinkCard
+    title="The plugin interface"
+    href="./plugins-interface"
+    description="Prev"
+  />
+  <LinkCard
+    title="Built in plugins"
+    href="./builtin-plugins"
+    description="Next"
+  />
+</CardGrid>

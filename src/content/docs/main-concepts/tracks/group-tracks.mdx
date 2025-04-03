@@ -1,0 +1,112 @@
+---
+title: Track Groups
+---
+
+import { LinkCard } from "@astrojs/starlight/components";
+import { CardGrid } from "@astrojs/starlight/components";
+import { Aside } from "@astrojs/starlight/components";
+
+Track groups allows to group different tracks (even of different type) into one single track. For example we could apply some plugins processing to both an audio and midi track by adding them to a track group.
+
+Track groups cannot store and play clips, nor record data, but they can contain effect plugins and shares common controls of audio and midi tracks like volume and panning.
+
+## Creation
+
+To create a track group we just need to call its constructor.
+
+```cs
+var group = new TrackGroup();
+// optionally, you can assign a name to the track group e.g new TrackGroup("MyGroup")
+```
+
+## Parameters
+
+There are some parameters we can customize.
+
+### Tweakable parameters
+
+Here is a list of the tweakable tracks group parameters:
+
+- `Muted`: changes the track mute state. If the track is muted, no sound will be heard.
+- `Name`: represents the name of the track.
+- `Pan`: panning amount of the track (how much the sound should be heard from left and right). Ranges from -50 (100% left) to +50 (100% right). Default value is zero.
+- `Volume`: volume of the track in dB. Ranges from -90 (completely silent) to +6 (clipping). Default value is zero.
+
+### Not tweakable parameters
+
+Here is a list of not tweakable tracks group parameters:
+
+- `Clips`: always empty for track groups.
+- `Tracks`: the tracks in the group.
+- `IsAudioTrack`: indicates if the track is an audio track.
+- `IsMidiTrack`: indicates if the track is a midi track.
+- `IsTrackGroup`: indicates if the track is a track group.
+- `IsInGroup`: track groups cannot be nested so it's always false.
+- `IsRecording`: track groups cannot record so it's always false.
+- `PluginEffects`: list of effects plugins in the track group.
+- `PluginInstrument`: not used by track groups.
+- `TrackGroup`: track groups cannot be nested so it's always null.
+- `LeftChannelGain`: the current gain of the left audio channel for the track.
+- `RightChannelGain`: the current gain of the right audio channel for the track.
+
+## Operations
+
+We can do some operations with tracks group. Here is a list:
+
+- `AddTrackToGroup()`: adds a track to the group.
+- `AddPlugin()`: adds a plugin to the track.
+- `RemoveAllPlugins()`: removes all plugins from the track.
+- `RemovePlugin()`: removes a specific plugin from the track.
+- `SwapFxPlugins`: swaps two effect plugins by index.
+- `RemoveTrackFromGroup()`: removes a specific track from the group.
+- `StopSounds()`: stops all playing clips of each track contained in the track group.
+
+<Aside type="note">
+  When a track is added to the group, it will send its audio output to the group
+  instead of the master mixer.
+
+On the same way, when a track is removed from the group, it will point to the master mixer again.
+
+</Aside>
+
+### Example
+
+In this example we add an audio and midi track to a track group.
+
+```cs
+var audioTrack = new AudioTrack(); // Create an audio track
+var midiTrack = new MidiTrack(); // Create a midi track
+var group = new TrackGroup(); // Create a track group
+
+group.AddTrackToGroup(audioTrack); // Add the audio track to the group
+group.AddTrackToGroup(midiTrack); // Add the midi track to the group
+```
+
+Now for example if we change the volume of the track group it will affect both the audio and midi track.
+
+## Events
+
+There are some events we can subscribe to in order to execute certain actions when something happens.
+
+- `PluginAdded`: called when a plugin has been added to the track.
+- `PluginRemoved`: called when a plugin has been removed from the track.
+- `TrackAdded`: called when a track has been added to the track group.
+- `TrackRemoved`: called when a track has been removed from the track group.
+- `VolumeMeasured`: provides volume metering data all the time.
+
+### Example
+
+In this example we print the name of the track that has been added to the track group.
+
+```cs
+var group = new TrackGroup();
+group.TrackAdded += (sender, e) =>
+{
+    Console.WriteLine($"Track {e.Track.Name} has been added to the track group.");
+};
+```
+
+<CardGrid>
+  <LinkCard title="Midi tracks" href="./midi-tracks" description="Prev" />
+  <LinkCard title="Master" href="../master/master" description="Next" />
+</CardGrid>

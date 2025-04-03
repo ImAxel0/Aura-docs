@@ -1,0 +1,119 @@
+---
+title: Main Concepts
+---
+
+import { LinkCard } from "@astrojs/starlight/components";
+import { CardGrid } from "@astrojs/starlight/components";
+import { Steps } from "@astrojs/starlight/components";
+import { Aside } from "@astrojs/starlight/components";
+
+This chapter aims to shows the main concepts and core features of the framework and how they should be used to effectively make an audio pipeline.
+
+## Framework Initialization
+
+A the start of the application we always have to initialize the framework like below.
+
+```cs
+AuraMain.Init(); // You can optionally pass a sample rate to use
+```
+
+<Aside>
+ The sample rate cannot be changed without restarting the application.
+</Aside>
+
+## Audio and Midi Devices
+
+To hear and play sounds, we need to select an audio device and choose between different available audio APIs based on our needs.
+
+Optionally, we can also chose a midi input device to use.
+
+<CardGrid>
+  <LinkCard title="Audio Devices" href="./devices/audio-devices" />
+  <LinkCard title="Midi Devices" href="./devices/midi-devices" />
+</CardGrid>
+
+## Clips
+
+Clips are the main tool through which you can store, edit and play sounds.
+
+There are two clip types:
+
+<Steps>
+
+1. **Audio clips**: to store and play audio files.
+2. **Midi clips**: to store and play midi files or midi data.
+
+</Steps>
+
+Both have useful properties that can be customized like enabled/disabled state, volume, starting time etc. which are explained in detail inside each clip page.
+
+<CardGrid>
+  <LinkCard title="Audio Clips" href="./clips/audio-clips" />
+  <LinkCard title="Midi Clips" href="./clips/midi-clips" />
+</CardGrid>
+
+## Tracks
+
+Tracks are used to store clips or other tracks, process the sound through plugins and send the processed sound to the master mixer.
+
+There are three track types:
+
+<Steps>
+
+1. **Audio tracks**: to store audio clips.
+2. **Midi tracks**: to store midi clips.
+3. **Track groups**: to store and mix other track types.
+
+</Steps>
+
+All track types have common controls like volume and panning which affect all the contained clips and can record whatever is playing inside them.
+
+Tracks can also contain both VSTs and built in plugins that process or generate the sound.
+
+<CardGrid>
+  <LinkCard title="Audio Tracks" href="./tracks/audio-tracks" />
+  <LinkCard title="Midi Tracks" href="./tracks/midi-tracks" />
+  <LinkCard title="Track Groups" href="./tracks/group-tracks" />
+</CardGrid>
+
+## Plugins
+
+Plugins are used to apply effects like equalization, reverb and delay to the incoming sound or to generate sounds.
+
+There are two types of plugins:
+
+<Steps>
+
+1. **VSTs (Virtual Studio Technology)**: external plugins you can load and use.
+2. **Built in**: framework built in plugins you can instantly use or create new ones.
+
+</Steps>
+
+Both types can be added to tracks to generate or modify the sound behaviour and are handled as one type through a common interface.
+
+<CardGrid>
+  <LinkCard title="The plugins interface" href="./plugins/plugins-interface" />
+  <LinkCard title="VST Plugins" href="./plugins/vst-plugins" />
+  <LinkCard title="Built In Plugins" href="./plugins/builtin-plugins" />
+</CardGrid>
+## Automations
+
+Clips parameters can be automated during playback by placing automation points at a specific time.
+For example, we could automate a clip volume making it go from -12dB to 0dB during a timespan of 10s.
+
+Note that not all parameters can be automated, and those who can are specific to the clip type.
+
+<LinkCard title="Clips automations" href="./automations/clips-automations" />
+
+<CardGrid>
+  <LinkCard
+    title="Usage example"
+    href="../getting-started/usage-example"
+    description="Prev"
+  />
+  <LinkCard
+    title="Audio devices"
+    href="./devices/audio-devices"
+    description="Next"
+  />
+</CardGrid>

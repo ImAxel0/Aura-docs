@@ -1,0 +1,32 @@
+---
+title: Midi Devices
+---
+
+import { LinkCard } from "@astrojs/starlight/components";
+import { CardGrid } from "@astrojs/starlight/components";
+import { Aside } from "@astrojs/starlight/components";
+
+In the framework a midi input device can be used to record midi events and create clips from them or to send midi events to plugin instruments.
+
+## Choosing a Midi Input Device
+
+To select an available midi input device we use the `CreateMidiInputDevice` method, passing the device name. We can get the input devices name using the `Extension.GetMidiInputsName` method.
+
+```cs
+// Get the available midi input devices name
+string[] midiInputs = Extensions.GetMidiInputsName();
+
+// Create a midi input device from the first device name
+AuraMain.CreateMidiInputDevice(midiInputs[0]);
+```
+
+This is all we need to know to setup midi devices.
+
+<CardGrid>
+  <LinkCard title="Audio devices" href="./audio-devices" description="Prev" />
+  <LinkCard
+    title="Audio clips"
+    href="../clips/audio-clips"
+    description="Next"
+  />
+</CardGrid>

@@ -1,0 +1,84 @@
+---
+title: Audio Devices
+---
+
+import { LinkCard } from "@astrojs/starlight/components";
+import { CardGrid } from "@astrojs/starlight/components";
+import { Aside } from "@astrojs/starlight/components";
+
+To select an audio device to use for audio playback there are multiple options.
+
+Here is a list of the available audio APIs and a brief explanation of which I personally think should be used based on the application needs.
+
+- **WaveOut**: the simplest one, will works fine for most cases where we just want to reproduce audio files and don't need very low latencies. It always use the selected windows audio device so we don't need to specify which device to use.
+- **DirectSound**: behaves similarly to WaveOut, but we can select which device to use.
+- **WASAPI**: can provide lower latencies than the twos before, especially in exclusive mode.
+- **ASIO**: the de-facto standard for audio interface drivers, provides the lowest latencies but should not be needed for most simple applications.
+
+For a better overview of the different APIs see the official NAudio output devices [documentation](https://github.com/naudio/NAudio/blob/master/Docs/OutputDeviceTypes.md).
+
+<Aside type="tip">
+  If you are gonna make use of midi features and especially VST plugins, I
+  highly recommend to use either DirectSound, WASAPI or ASIO with a low latency. This will reduce the chance of
+  time misplacements when playing midi clips and give a better result overall.
+</Aside>
+
+## Choosing the Output Device
+
+To choose an output device to use and the API type, we have different ways.
+
+### Choice based on the API
+
+The simplest way to setup an audio device for the framework is to call the `CreateAudioDevice` method passing the wanted audio API. The framework will then use the currently selected windows audio device and the choosen API. (except for ASIO where it will select the first found ASIO driver).
+
+```cs
+// Create an audio device using the WASAPI API and default settings
+AuraMain.CreateAudioDevice(AudioAPI.WASAPI);
+```
+
+### DirectSound
+
+To use the DirectSound API and customize some of its options like device to use and desired latency, use the `CreateDirectSoundDevice` method.
+
+```cs
+// Create an audio device using the DirectSound API, the windows selected device and a desired latency of 50ms
+AuraMain.CreateDirectSoundDevice(50);
+
+// Create a new DirectSound audio device by its name and optional desired latency of 50ms
+string[] devices = Extensions.GetDirectSoundNames(); // Get the devices name
+AuraMain.CreateDirectSoundDevice(devices[0], 50); // Select the first device
+```
+
+### Wasapi
+
+To use the WASAPI API and customize some of its options like shared/exclusive mode, device and desired latency, use the `CreateWasapiDevice` method.
+
+The boolean parameter says if the device should be opened in shared or exclusive mode. In exclusive mode, the application requests exclusive access to the soundcard, so sounds coming outside of the app won't be heard. This is only recommended if you need to work at very low latencies.
+
+```cs
+// Create an audio device using the WASAPI API, the windows selected device, shared mode and a desired latency of 200ms
+AuraMain.CreateWasapiDevice(false, 200);
+
+// Create a new WASAPI audio device by its name, using exclusive mode and optional desired latency of 200ms.
+string[] devices = Extensions.GetWasapiNames();
+AuraMain.CreateWasapiDevice(devices[0], true, 200);
+```
+
+### Asio
+
+To use the ASIO API and select an ASIO driver by its name, use the `CreateAsioDevice` method along with `Extensions.GetAsioNames` to get the available drivers name.
+
+ASIO also allows to customize some parameters through the driver interface you can invoke with `AsioSettingsPanel`.
+
+```cs
+// Create a new ASIO audio device by driver name
+string[] drivers = Extensions.GetAsioNames();
+AuraMain.CreateAsioDevice(drivers[0]); // Select the first found driver
+
+AuraMain.AsioSettingsPanel(); // Show the ASIO driver controls panel
+```
+
+<CardGrid>
+  <LinkCard title="Overview" href="../core-features" description="Prev" />
+  <LinkCard title="Midi devices" href="./midi-devices" description="Next" />
+</CardGrid>

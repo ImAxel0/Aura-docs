@@ -1,0 +1,58 @@
+---
+title: Master Mixer
+---
+
+import { LinkCard } from "@astrojs/starlight/components";
+import { CardGrid } from "@astrojs/starlight/components";
+import { Aside } from "@astrojs/starlight/components";
+
+The master mixer is the audio endpoint that sends the sound to the output device.
+
+It also stores all tracks and shares some of their controls like volume and panning.
+
+## Parameters
+
+There are two parameters we can tweak:
+
+- `Volume`: volume of the master mixer in dB. Ranges from -90 (completely silent) to +6 (clipping). Default value is zero.
+- `Pan`: panning amount of the master mixer (how much the sound should be heard from left and right). Ranges from -50 (100% left) to +50 (100% right). Default value is zero.
+
+## Operations
+
+These are the operations we can do with the master:
+
+- `AddTrack()`: adds a track to the master mixer.
+- `RemoveTrack()`: removes a track from the master mixer.
+- `RemoveAllTracks()`: removes all tracks from the master mixer.
+- `StopSounds()`: globally stop all playing sounds by stopping all clips on each track.
+
+<Aside type="note">
+  When a track is created, it gets automatically added to the master mixer.
+</Aside>
+
+## Iterating on all master tracks
+
+In this example we iterate on all tracks added to the master mixer and print the name of each of their clip.
+
+```cs
+foreach (var track in Master.Tracks)
+{
+    foreach (var clip in track.Clips)
+    {
+        Console.WriteLine(clip.Name);
+    }
+}
+```
+
+<CardGrid>
+  <LinkCard
+    title="Group tracks"
+    href="../tracks/group-tracks"
+    description="Prev"
+  />
+  <LinkCard
+    title="The plugins interface"
+    href="../plugins/plugins-interface"
+    description="Next"
+  />
+</CardGrid>

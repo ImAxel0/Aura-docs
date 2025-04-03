@@ -1,0 +1,122 @@
+---
+title: Midi Clips
+---
+
+import { LinkCard } from "@astrojs/starlight/components";
+import { CardGrid } from "@astrojs/starlight/components";
+import { Aside } from "@astrojs/starlight/components";
+
+Midi clips are used to load, store and play midi files or generic midi data.
+
+## Creation
+
+To create a new midi clip we need either a midi file or a `MidiFile` instance of [DryWetMidi](https://github.com/melanchall/drywetmidi).
+
+```cs
+var midiClip = new MidiClip("path/to/song.mid"); // Creation of a midi clip from a midi file
+
+// Creation of a midi clip from a MidiFile instance of the DryWetMidi library
+MidiFile midiData = new MidiFile();
+var midiClip2 = new MidiClip(midiData)
+```
+
+## Parameters
+
+There are some parameters we can customize.
+
+### Tweakable parameters
+
+Here is list of the tweakable midi clip parameters:
+
+- `Enabled`: changes the clip enabled/disabled state. If the clip is disabled it won't be played.
+- `Name`: represents the name of the clip. If the clip is created from a midi file the name defaults to the file name.
+- `Time`: represents the time of the clip on a timeline. This isn't used by the framework as per se, but can be useful for the user to define when the clip should be played or where should be positioned.
+- `StartMarker`: defines at what seconds the clip playback should start from. Eg. for a midi clip of 30s and a **StartMarker** of 8s, the clip will start playing from 8s.
+- `EndMarker`: defines at what seconds the clip should stop playing. Eg. for a midi clip of 30s and an **EndMarker** of 24s, the clip will play from 0s to 24s.
+
+### Not tweakable parameters
+
+Here is list of not tweakable midi clip parameters:
+
+- `Id`: an unique id in the form `5cafb3a8-dba4-47ce-9e58-03d972526c50` that could be useful to distinguish between clips or to the user.
+- `FilePath`: represents the file path of the midi file used by the midi clip (if any).
+- `CurrentTime`: represents the current time of the clip playback.
+- `IsPlaying()`: indicates if the clip is currently playing.
+- `Duration`: represents the total duration of the clip. It takes into account starting/ending markers and the speed properties of the clip.
+- `IsAudioClip`: indicates if it is an audio clip or not.
+- `IsMidiClip`: indicates if it is a midi clip or not.
+- `Track`: the track which contains the clip if any.
+- `IsInTrack`: indicates if the clip is inside a track.
+- `AudioFile`: not used by midi clips.
+- `MidiFile`: **MidiFile** instance of DryWetMidi. Contains the midi data which can be modified by the user. (e.g add or remove notes)
+- `Automations`: dictionary which contains all the clip automations. (see the automations article for guidance)
+
+## Operations
+
+We can do some operations with midi clips. Here is a list:
+
+- `Play()`: starts the clip playback.
+- `Stop()`: stops the clip playback.
+- `Seek()`: go to a specific time during playback. (must be between **StartMarker** and **EndMarker**)
+- `Split()`: splits the clip in twos at the specified time. Returns a new clip which represents the rightmost part.
+- `SplitFromTo()`: splits the clip in threes from time to time. Returns two new clips which represent the middle and rightmost part.
+- `CutOut()`: cuts out a part of the clip from time to time. Returns a new clip which represent the rightmost part.
+- `Duplicate()`: creates an unique copy of the midi clip.
+- `GetDuration()`: gets the real duration of the **MidiFile** instance used by the midi clip.
+- `AddAutomationPoint()`: adds an automation point for a parameter at a specified time.
+- `ClearAutomation()`: clears an automation for a parameter.
+- `ClearAllAutomations()`: clears all automations of the midi clip.
+
+<Aside type="note">
+  `Split` `SplitFromTo` `CutOut` work by just adjusting the `StartMarker` and `EndMarker` properties without touching the original file data, so we can always revert to a previous state.
+
+See the examples below for guidance.
+
+</Aside>
+
+<Aside type="note">
+  Clips must be inside tracks to be played. (see the tracks articles)
+</Aside>
+
+### Examples
+
+For examples of operations on midi clips refer to the examples of audio clips since they work exactly the same way.
+
+<LinkCard title="Operation examples" href="./audio-clips#examples" />
+
+## Events
+
+There are some events we can subscribe to in order to execute certain actions when a parameter changes.
+
+- `EnableChanged`: called when the clip `Enabled` property has been changed.
+- `EndMarkerChanged`: called when the clip `EndMarker` property has been changed.
+- `NameChanged`: called when the clip `Name` property has been changed.
+- `StartMarkerChanged`: called when the clip `StartMarker` property has been changed.
+- `TimeChanged`: called when the clip `Time` property has been changed.
+
+### Example
+
+In this example we update the `Time` parameter of the audio clip to reflect changes of `StartMarker`.
+
+```cs
+var midiClip = new MidiClip("path/to/midi.mid");
+
+midiClip.StartMarkerChanged += (sender, e) =>
+{
+    double changeLength = e.NewTime - e.OldTime;
+    midiClip.Time += changeLength;
+};
+
+// here midiClip.Time is still 0
+midiClip.StartMarker = 2;
+// here midiClip.Time is 2
+```
+
+<CardGrid>
+  <LinkCard title="Audio clips" href="./audio-clips" description="Prev" />
+  <LinkCard
+    title="Audio tracks"
+    href="../tracks/audio-tracks"
+    description="Next"
+  />
+</CardGrid>

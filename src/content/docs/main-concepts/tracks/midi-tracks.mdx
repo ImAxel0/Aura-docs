@@ -1,0 +1,127 @@
+---
+title: Midi Tracks
+---
+
+import { LinkCard } from "@astrojs/starlight/components";
+import { CardGrid } from "@astrojs/starlight/components";
+import { Aside } from "@astrojs/starlight/components";
+
+Midi tracks can contains midi clips and plugins, can play and mix multiple midi clips at the same time, process the sound of all playing midi clips and send the final audio to the master mixer.
+
+## Creation
+
+To create a new midi track, we just need to call its constructor.
+
+```cs
+var track = new MidiTrack();
+// optionally, you can assign a name to the track e.g new MidiTrack("MyTrack")
+```
+
+## Parameters
+
+There are some parameters we can customize.
+
+### Tweakable parameters
+
+Here is a list of the tweakable midi tracks parameters:
+
+- `Muted`: changes the track mute state. If the track is muted, no sound will be heard.
+- `Name`: represents the name of the track.
+- `Pan`: panning amount of the track (how much the sound should be heard from left and right). Ranges from -50 (100% left) to +50 (100% right). Default value is zero.
+- `Volume`: volume of the track in dB. Ranges from -90 (completely silent) to +6 (clipping). Default value is zero.
+- `ReceiveMidiInput`: if set to true, the plugin instrument of the track will receive midi events from the used midi input device.
+
+### Not tweakable parameters
+
+Here is a list of not tweakable midi tracks parameters:
+
+- `Clips`: list of midi clips contained in the midi track.
+- `IsAudioTrack`: indicates if the track is an audio track.
+- `IsMidiTrack`: indicates if the track is a midi track.
+- `IsTrackGroup`: indicates if the track is a track group.
+- `IsInGroup`: indicates if the track is inside a track group.
+- `IsRecording`: indicates if the track is recording.
+- `PluginEffects`: list of effects plugins in the midi track.
+- `PluginInstrument`: plugin instrument used by the midi track if any.
+- `TrackGroup`: the track group of the track if any.
+- `LeftChannelGain`: the current gain of the left audio channel for the track.
+- `RightChannelGain`: the current gain of the right audio channel for the track.
+
+## Operations
+
+We can do some operations with audio tracks. Here is a list:
+
+- `AddClip()`: adds a midi clip to the track.
+- `AddPlugin()`: adds a plugin to the track.
+- `RemoveAllClips()`: removes all midi clips from the track.
+- `RemoveAllPlugins()`: removes all plugins from the track.
+- `SwapFxPlugins`: swaps two effect plugins by index.
+- `RemoveClip()`: removes a specific clip from the track.
+- `RemovePlugin()`: removes a specific plugin from the track.
+- `StartRecording()`: starts recording midi data from the midi input device.
+- `StopRecording()`: stops recording midi input, saves the file and returns a new midi clip created from the record. (the clip will be added to the recording track)
+- `StopSounds()`: stops all playing midi clips of the track.
+
+<Aside type="note">
+  We obviously cannot add audio clips into midi tracks.
+  Doing so results in an error message you can read from
+  the `OperationResult` instance you get from calling the methods.
+
+See the examples below for guidance.
+
+</Aside>
+
+### Examples
+
+#### Adding midi clip to track and playing it
+
+```cs
+var track = new MidiTrack(); // Create a midi track
+var midiClip = new MidiClip("path/to/midi.mid"); // Create a midi clip
+var result = track.AddClip(midiClip); // Try add the clip to the track
+if (!result.IsSuccess)
+{
+    // Print the error message if the clip couldn't be added
+    Console.WriteLine($"Couldn't add clip to track: {result.Message}");
+}
+midiClip.Play(); // Start the clip playback. (the midi track needs a plugin instrument to hear something)
+```
+
+#### Recording from midi input device and creating a clip from it
+
+```cs
+var track = new MidiTrack(); // Create a midi track
+
+// Start recording midi events from the midi input device and specify the path where the .mid file will be saved
+track.StartRecording("path/to/recording.mid");
+
+// Stop recording, save the file and return a new midi clip created from the recording
+var recClip = track.StopRecording();
+```
+
+## Events
+
+There are some events we can subscribe to in order to execute certain actions when something happens.
+
+- `ClipAdded`: called when a clip has been added to the track.
+- `ClipRemoved`: called when a clip has been removed from the track.
+- `PluginAdded`: called when a plugin has been added to the track.
+- `PluginRemoved`: called when a plugin has been removed from the track.
+- `VolumeMeasured`: provides volume metering data all the time.
+
+### Example
+
+In this example we print the name of the clip that has been added to the track.
+
+```cs
+var midiTrack = new MidiTrack();
+midiTrack.ClipAdded += (sender, e) =>
+{
+    Console.WriteLine($"Clip {e.Clip.Name} has been added to the track.");
+};
+```
+
+<CardGrid>
+  <LinkCard title="Audio tracks" href="./audio-tracks" description="Prev" />
+  <LinkCard title="Group tracks" href="./group-tracks" description="Next" />
+</CardGrid>

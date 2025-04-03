@@ -1,0 +1,56 @@
+---
+title: Usage example
+---
+
+import { LinkCard } from "@astrojs/starlight/components";
+import { CardGrid } from "@astrojs/starlight/components";
+
+## Playing an audio file
+
+This example shows a basic console application which creates an audio clip from an audio file, adds it to an audio track, plays it and then changes the track volume and panning.
+
+```cs
+using Aura;
+using Aura.Clips;
+using Aura.Tracks;
+
+public static class Program
+{
+    private static void Main()
+    {
+        AuraMain.Init(); // Initialize the framework
+
+        // Create an audio device using the WaveOut API
+        AuraMain.CreateAudioDevice(AudioAPI.WaveOut);
+
+        // Creation of an audio clip from the sound.wav audio file
+        var clip = new AudioClip("path/to/sound.wav"); 
+
+        // Creation of a new audio track
+        var track = new AudioTrack();
+
+        track.AddClip(clip); // Adding the clip to the audio track
+        clip.Play(); // Start the clip playback
+
+        Console.ReadKey(); // Wait for a keypress before continuing the program
+
+        track.Volume = -6; // Set the track volume to -6dB
+        track.Pan = -50; // Pan the track audio 100% to the left
+
+        Console.ReadKey(); // Wait for a keypress before exiting the program
+    }
+}
+```
+
+This was a simple example to get started.
+
+Next we will go through the core concepts of the framework.
+
+<CardGrid>
+  <LinkCard title="Introduction" href="./introduction" description="Prev" />
+  <LinkCard
+    title="Main concepts"
+    href="../main-concepts/core-features"
+    description="Next"
+  />
+</CardGrid>

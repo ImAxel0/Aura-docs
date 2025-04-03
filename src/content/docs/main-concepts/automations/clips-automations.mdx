@@ -1,0 +1,112 @@
+---
+title: Clips Automations
+---
+
+import { LinkCard } from "@astrojs/starlight/components";
+import { CardGrid } from "@astrojs/starlight/components";
+import { Aside } from "@astrojs/starlight/components";
+
+Both audio and midi clips parameters can be automated.
+
+For example we can make the volume go from a value to another value in a timespan and with a certain curve.
+
+Not all parameters can be automated, and those who can are specific to the clip type.
+
+## How to automate
+
+To automate a parameter of a clip, we use the `AddAutomationPoint()` method, which takes the parameter to automate, the time in seconds at which to place the automation point, the value of the parameter at the point and optionally the curve type to use for going to the next point
+
+```cs
+// Linearly pan from left to right from 0s to 12s
+audioClip.AddAutomationPoint(AutomationParameter.Pan, 0, -50);
+audioClip.AddAutomationPoint(AutomationParameter.Pan, 12, 50);
+
+// Smoothly change volume from -12dB to 0dB in the first 4s
+audioClip.AddAutomationPoint(AutomationParameter.Volume, 0, -12, InterpolationType.Smooth);
+audioClip.AddAutomationPoint(AutomationParameter.Volume, 4, 0);
+
+// Abrubptly change the pitch to -6 semitones at 8s
+audioClip.AddAutomationPoint(AutomationParameter.Pitch, 0, 0, InterpolationType.Step);
+audioClip.AddAutomationPoint(AutomationParameter.Pitch, 8, -6);
+```
+
+<Aside type="note">
+  The `InterpolationType` refers to the curve going to the next point. That's
+  why we haven't set it in the second automation point for Volume and Pitch
+  parameters.
+</Aside>
+
+To delete an automation for a parameter we use the `ClearAutomation()` method, passing the parameter we want to remove.
+
+If we want to remove all the automations from a clip we use the `ClearAllAutomations()` method.
+
+```cs
+audioClip.ClearAutomation(AutomationParameter.Pan); // Remove the Pan automation from the audio clip
+audioClip.ClearAllAutomations(); // Remove all automations from the audio clip
+```
+
+<Aside type="note">
+  The time at which the point is placed doesn't account for the clip
+  `StartMarker` and `EndMarker`. If you have a clip of 10s with a
+  **StartMarker** of 6s and make an automation which changes a parameter from 0s to
+  4s, when the clip starts playing the value will already be at what the 4s
+  point value is.
+
+```cs
+audioClip.StartMarker = 6; // Make the clip playback start at 6 seconds
+
+// Create an automation which changes the pan from left to right during the first 4 seconds of the clip playback
+audioClip.AddAutomationPoint(AutomationParameter.Pan, 0, -50);
+audioClip.AddAutomationPoint(AutomationParameter.Pan, 4, 50);
+
+audioClip.Play(); // Here the clip playback starts at 6 seconds, so the pan is already 50, not -50
+```
+
+Also, automation points can be placed outside of the clip time range, so they could even be negative or exceed the clip duration.
+What must not exceed are the values of the points, else the automation will stop or an exception will be thrown.
+
+</Aside>
+
+## Automation parameters
+
+Here is a list of parameters which can be automated for each clip type and some info on their possible values.
+
+### Audio Clips
+
+- `Volume`: ranges from -90 to +6
+- `Pan`: ranges from -50 to +50
+- `Pitch`: unlimited range
+
+### Midi clips
+
+All midi clips parameters ranges from 0 to 127.
+
+- `Volume`: controls the midi velocity
+- `Pan`: 0 = hard left, 64 = center, 127 = hard right
+- `Balance`: 0 = hard left, 64 = center, 127 = hard right
+- `Sustain pedal`: enabled if value >= 64
+- `Portamento`: enabled if value >= 64
+- `SostenutoPedal`: enabled if value >= 64
+- `SoftPedal`: enabled if value >= 64
+- `LegatoPedal`: enabled if value >= 64
+- `Modulation`: controls a vibrato effect
+
+## Accessing the clip automations
+
+To access the automations added to a clip and their points, we use the `Automations` property of the clip, which is a dictionary containing the automated parameter as the key, and the lane for that parameter as the value. The lane contains all the points.
+
+```cs "Automations"
+public IReadOnlyDictionary<AutomationParameter, AutomationLane> Automations => _automations;
+
+// Iterate on each automated parameter, print its name, then iterate on all of its points and print their time and value at time
+foreach (var automation in audioClip.Automations)
+{
+    Console.WriteLine($"Parameter: {automation.Key}");
+
+    AutomationLane lane = automation.Value;
+    foreach (var point in lane.Points)
+    {
+        Console.WriteLine($"Time: {point.Time} Value: {point.Value}");
+    }
+}
+```

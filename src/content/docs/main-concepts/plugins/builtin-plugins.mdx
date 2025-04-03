@@ -1,0 +1,51 @@
+---
+title: Built In Plugins
+---
+
+import { LinkCard } from "@astrojs/starlight/components";
+import { CardGrid } from "@astrojs/starlight/components";
+import { Aside } from "@astrojs/starlight/components";
+import { Steps } from "@astrojs/starlight/components";
+
+With built in plugins we refer to classes which implement the `IPlugin` interface and doesn't rely on external VSTs.
+
+They can process the sound by acting directly on the received audio samples and can be added and removed from tracks like VSTs.
+
+The framework offers two built in plugins for common effects:
+
+<Steps>
+
+1. **Utility**: plugin which controls volume, pan, width and channel polarity of the provided audio source.
+2. **PitchShifter**: plugin which controls the pitch of the provided audio source.
+
+</Steps>
+
+## Example
+
+In this example we create an audio clip, add it to a created audio track, create the Utility plugin and add it to the audio track, then play the audio clip.
+
+```cs
+var audioClip = new AudioClip("path/to/sound.wav"); // Create an audio clip
+var audioTrack = new AudioTrack(); // Create an audio track
+
+// Create an instance of the Utility plugin and setup some of its parameters
+var utility = new Utility() { Volume = 0.5f, Mono = true };
+
+audioTrack.AddClip(audioClip); // Add the audio clip to the audio track
+audioTrack.AddPlugin(utility); // Add the Utility plugin to the audio track
+
+audioClip.Play(); // Play the audio clip (clip will play at half volume and in mono)
+```
+
+## Extending the framework plugins
+
+The framework could eventually be extended by creating new built in plugins which derives from the `IPlugin` interface.
+
+<CardGrid>
+  <LinkCard title="VST plugins" href="./vst-plugins" description="Prev" />
+  <LinkCard
+    title="Automations"
+    href="../automations/clips-automations"
+    description="Next"
+  />
+</CardGrid>

@@ -1,0 +1,41 @@
+---
+title: Installation
+---
+
+import { LinkCard } from "@astrojs/starlight/components";
+import { CardGrid } from "@astrojs/starlight/components";
+import { Aside } from "@astrojs/starlight/components";
+
+## Requirements
+
+- [.NET 6.0 SDK](https://dotnet.microsoft.com/it-it/download/dotnet/6.0): the framework is built on the .NET 6 version for better compatibility with some of the used libraries, but should also works on later versions, although it has not been tested.
+
+## Supported OS
+
+- Windows
+
+There is no cross platform support as most of the used libraries have partial cross platform capabilities or not at all.
+
+## Installation
+
+The easiest way to get started is to install the NuGet package with the NuGet Package Manager you can find on Visual Studio in `Tools` > `NuGet Package Manager` > `Package Manager Console`, running the command below. For others IDE use the relative package manager.
+
+```bash
+Install-Package Aura
+```
+
+If you are gonna use VST plugins in your app, you will also have to install the `VST.NET2-Host` package.
+
+```bash
+Install-Package VST.NET2-Host
+```
+
+After installing the needed packages, make your project target the `x64` platform.
+
+<Aside>
+  Target platform `x64` is required because the framework was built on that target to support VST plugins. For reference, read the first lines [here](https://obiwanjacobi.github.io/vst.net/GettingStarted.html).
+</Aside>
+
+<CardGrid>
+  <LinkCard title="Introduction" href="./introduction" description="Next" />
+</CardGrid>

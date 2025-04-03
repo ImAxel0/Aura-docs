@@ -1,0 +1,58 @@
+---
+title: The Plugins Interface
+---
+
+import { LinkCard } from "@astrojs/starlight/components";
+import { CardGrid } from "@astrojs/starlight/components";
+import { Aside } from "@astrojs/starlight/components";
+
+## The `IPlugin` interface
+
+VSTs and built in plugins are managed through a shared interface named `IPlugin`.
+
+This allows to handle them as only one type and eventually extend the framework by creating new built in plugins that can be mixed together with external VSTs.
+
+Here is a list of properties and methods that can be used on both external and built in plugins.
+
+```cs
+public interface IPlugin
+{
+    // The plugin state
+    bool Enabled { get; set; }
+
+    // Name of the plugin
+    string PluginName { get; set; }
+
+    // Unique ID of the plugin
+    string PluginId { get; }
+
+    // The type of the plugin (effect or instrument)
+    PluginType PluginType { get; }
+
+    // Should be called only by the plugin itself to process/generate sound
+    void Process(float[] input, float[] output, int samplesRead);
+
+    // Used to send or handle received midi events
+    void ReceiveMidiEvent(MidiEvent midiEvent);
+
+    // Toggles the plugin state
+    public void Toggle()
+    {
+        Enabled = !Enabled;
+    }
+
+    // Releases the resources used by the plugin
+    void Dispose();
+
+    // Shows the plugin interface if any
+    void OpenPluginWindow();
+
+    // Hides the plugin interface if any
+    void ClosePluginWindow();
+}
+```
+
+<CardGrid>
+  <LinkCard title="Master mixer" href="../master/master" description="Prev" />
+  <LinkCard title="VST plugins" href="./vst-plugins" description="Next" />
+</CardGrid>
