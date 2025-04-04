@@ -14,7 +14,7 @@ export default defineConfig({
       },
       customCss: ["./src/styles/props.css"],
       social: {
-        github: "https://github.com/withastro/starlight",
+        github: "https://github.com/ImAxel0/Aura",
       },
       plugins: [starlightImageZoom()],
       sidebar: [
