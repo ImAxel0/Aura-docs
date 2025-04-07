@@ -70,6 +70,7 @@ We can do some operations with audio clips. Here is a list:
 - `Reverse()`: reverses the clip. _Will do nothing if called while the clip is playing_
 - `Duplicate()`: creates an unique copy of the audio clip.
 - `GetDuration()`: gets the real duration of the audio file used by the audio clip.
+- `SaveProcessedAudioFile()`: saves the processed audio file on disk.
 - `AddAutomationPoint()`: adds an automation point for a parameter at a specified time.
 - `ClearAutomation()`: clears an automation for a parameter.
 - `ClearAllAutomations()`: clears all automations of the audio clip.
@@ -136,6 +137,15 @@ var audioClip2 = audioClip.CutOut(4, 8);
 ```
 
 ![Audio clip split](../../../../assets/clips/audioclip-cutout.png)
+
+#### SaveProcessedAudioFile
+
+The method saves the audio clip file on disk processed by all clip parameters and automations. (StartMarker, Volume, Pan, Pitch and so on)
+
+```cs
+// Save the processed audio clip at given path
+audioClip.SaveProcessedAudioFile("path/to/processed.wav");
+```
 
 ## Events
 

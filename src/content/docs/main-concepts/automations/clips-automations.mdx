@@ -36,6 +36,8 @@ audioClip.AddAutomationPoint(AutomationParameter.Pitch, 8, -6);
   parameters.
 </Aside>
 
+### Deleting automated parameters
+
 To delete an automation for a parameter we use the `ClearAutomation()` method, passing the parameter we want to remove.
 
 If we want to remove all the automations from a clip we use the `ClearAllAutomations()` method.
@@ -44,6 +46,17 @@ If we want to remove all the automations from a clip we use the `ClearAllAutomat
 audioClip.ClearAutomation(AutomationParameter.Pan); // Remove the Pan automation from the audio clip
 audioClip.ClearAllAutomations(); // Remove all automations from the audio clip
 ```
+
+### Deleting single points
+
+If we want to remove a single automation point from a parameter we can use the `ClearAutomationPoint()` method which takes either the point time or instance.
+
+```cs
+audioClip.ClearAutomationPoint(AutomationParameter.Pan, 5.0); // Remove the Pan automation point at 5 seconds
+audioClip.ClearAutomationPoint(AutomationParameter.Pan, point); // Remove the passed point parameter by instance (see how to access the points at the end of the guide)
+```
+
+---
 
 <Aside type="note">
   The time at which the point is placed doesn't account for the clip
