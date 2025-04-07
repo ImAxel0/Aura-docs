@@ -10,18 +10,18 @@ import { CardGrid } from "@astrojs/starlight/components";
 This example shows a basic console application which creates an audio clip from an audio file, adds it to an audio track, plays it and then changes the track volume and panning.
 
 ```cs
-using Aura;
-using Aura.Clips;
-using Aura.Tracks;
+using Sonora;
+using Sonora.Clips;
+using Sonora.Tracks;
 
 public static class Program
 {
     private static void Main()
     {
-        AuraMain.Init(); // Initialize the framework
+        SonoraMain.Init(); // Initialize the framework
 
         // Create an audio device using the WaveOut API
-        AuraMain.CreateAudioDevice(AudioAPI.WaveOut);
+        SonoraMain.CreateAudioDevice(AudioAPI.WaveOut);
 
         // Creation of an audio clip from the sound.wav audio file
         var clip = new AudioClip("path/to/sound.wav"); 

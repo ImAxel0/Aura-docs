@@ -5,19 +5,19 @@ title: Audio Clip Automations
 In this example we automate an audio clip parameters by placing automation points at specific times.
 
 ```cs
-using Aura;
-using Aura.Clips;
-using Aura.Tracks;
-using Aura.Automations;
+using Sonora;
+using Sonora.Clips;
+using Sonora.Tracks;
+using Sonora.Automations;
 
 public class Program
 {
     private static void Main()
     {
-        AuraMain.Init(); // Initialize the framework
+        SonoraMain.Init(); // Initialize the framework
 
         // Create an audio device using the WaveOut API
-        AuraMain.CreateAudioDevice(AudioAPI.WaveOut);
+        SonoraMain.CreateAudioDevice(AudioAPI.WaveOut);
 
         // Create an audio clip from an audio file
         var audioClip = new AudioClip("sound.wav");

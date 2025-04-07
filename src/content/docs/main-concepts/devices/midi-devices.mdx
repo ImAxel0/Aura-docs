@@ -17,7 +17,7 @@ To select an available midi input device we use the `CreateMidiInputDevice` meth
 string[] midiInputs = Extensions.GetMidiInputsName();
 
 // Create a midi input device from the first device name
-AuraMain.CreateMidiInputDevice(midiInputs[0]);
+SonoraMain.CreateMidiInputDevice(midiInputs[0]);
 ```
 
 This is all we need to know to setup midi devices.

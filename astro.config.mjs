@@ -7,10 +7,10 @@ import starlightImageZoom from "starlight-image-zoom";
 export default defineConfig({
   integrations: [
     starlight({
-      title: "Aura Docs",
+      title: "Sonora Docs",
       favicon: "./favicon.png",
       logo: {
-        src: "./src/assets/logo.png",
+        src: "./src/assets/sonora.png",
       },
       customCss: ["./src/styles/props.css"],
       social: {

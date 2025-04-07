@@ -7,18 +7,18 @@ import { Steps } from "@astrojs/starlight/components";
 Here we show how to play an audio file by creating an audio clip from it and adding it to an audio track.
 
 ```cs
-using Aura;
-using Aura.Clips;
-using Aura.Tracks;
+using Sonora;
+using Sonora.Clips;
+using Sonora.Tracks;
 
 public class Program
 {
     private static void Main()
     {
-        AuraMain.Init(); // Initialize the framework
+        SonoraMain.Init(); // Initialize the framework
 
         // Create an audio device using the WaveOut API
-        AuraMain.CreateAudioDevice(AudioAPI.WaveOut);
+        SonoraMain.CreateAudioDevice(AudioAPI.WaveOut);
 
         // Create an audio clip from an audio file
         var audioClip = new AudioClip("path/to/sound.wav");
@@ -39,9 +39,9 @@ public class Program
 ```
 
 <Steps>
-  1. The framework is initialized with `AuraMain.Init()`.
+  1. The framework is initialized with `SonoraMain.Init()`.
 
-  2. A WASAPI audio device is created with `AuraMain.CreateAudioDevice(AudioAPI.WaveOut)`.
+  2. A WASAPI audio device is created with `SonoraMain.CreateAudioDevice(AudioAPI.WaveOut)`.
 
   3. An audio clip is created from a .wav file.
 
